@@ -22,12 +22,12 @@ peliculas = [
 ]
 
 #1. get para ver la cartelera completa.
-@app.get("/Cartelera")
-async def movie():
+@app.get("/cartelera")
+async def movies():
     return peliculas
 
 #2. get por id para buscar usando path
-@app.get("/Movie/{id}")
+@app.get("/movie/{id}")
 async def buscarPelicula(
     id: int = Path(gt=0, description="El ID tiene que ser mayor a 0(cero)")
 ):
@@ -37,7 +37,7 @@ async def buscarPelicula(
     return {"detail": "Pelicula no encontrada"}
 
 #3. post para agregar una pelicula nueva
-@app.post("/Movies nueva|s")
+@app.post("/Movie-nueva")
 async def nuevaPelicula(
     id: int = Body(gt=0),
     titulo: str = Body(min_length=2, max_length=50),
@@ -59,7 +59,7 @@ async def nuevaPelicula(
     return nueva_pelicula
 
 #4. put para editar datos de las peliculas usando path para buscar y body para modificar los datos.
-@app.put("/Modificar peliculas")
+@app.put("/modificar-peliculas/{id}")
 async def editar_pelicula(
     id: int = Path(gt=0, description="ID de la pelicula a editar"),
     titulo: str = Body(min_length=2, max_length=50),
@@ -75,10 +75,11 @@ async def editar_pelicula(
             m["productor"] = productor
             m["calidad"] = calidad
             m["horario"] = horario
+            return m
     return {"detail": "Artista no encontrado"}
 
 #5. delete para borrado logico y fisico usando query para elegir el tipo.
-@app.delete("/Movie/{id}")
+@app.delete("/movie/{id}")
 async def borrar_pelicula(
     id: int = Path(gt=0),
     logico: bool = Query(default=False, description="¿Quiere desactivar la pelicula?")
